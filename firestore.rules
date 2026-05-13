@@ -146,7 +146,7 @@ service cloud.firestore {
     }
 
     match /results/{resultId} {
-      allow read: if isSignedIn() && (isAdmin() || (resource != null && resource.data.studentEmail == request.auth.token.email));
+      allow read: if isSignedIn();
       allow create: if isAdmin(); // Relaxed validation for admin to ensure functionality
       allow update: if isAdmin();
       allow delete: if isAdmin();

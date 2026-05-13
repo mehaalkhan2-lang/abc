@@ -29,7 +29,9 @@ export default function Results({ user, role, userProfile }: { user: any, role: 
   }, [role]);
 
   useEffect(() => {
-    const q = query(collection(db, 'results'), orderBy('date', 'desc'));
+    // Both admins and students can now see all results on the leaderboard
+    const resultsRef = collection(db, 'results');
+    const q = query(resultsRef, orderBy('date', 'desc'));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const docs = snapshot.docs.map(doc => ({
@@ -62,7 +64,9 @@ export default function Results({ user, role, userProfile }: { user: any, role: 
                       result.studentName.toLowerCase().includes(lookupName.toLowerCase().trim()) && 
                       result.classLevel === lookupClass;
     
-    if (role === 'admin') return matchesSearch && matchesClass;
+    // Students and admins can see leaderboard
+    if (role === 'admin' || viewMode === 'leaderboard') return matchesSearch && matchesClass;
+    // Personal mode for students looking for specific results
     if (viewMode === 'personal') return isPersonal && matchesClass;
     return false;  }).sort((a, b) => {
     const aPerc = (a.marks / a.totalMarks);
@@ -85,22 +89,20 @@ export default function Results({ user, role, userProfile }: { user: any, role: 
         </div>
         
         <div className="flex flex-wrap gap-4 items-center">
-          {role === 'admin' && (
-            <div className="flex bg-slate-100 p-1 rounded-xl">
-              <button 
-                onClick={() => setViewMode('personal')}
-                className={`px-4 py-2 rounded-lg text-xs font-black uppercase transition-all ${viewMode === 'personal' ? 'bg-white shadow-sm text-brand-primary' : 'text-slate-500'}`}
-              >
-                My Marks
-              </button>
-              <button 
-                onClick={() => setViewMode('leaderboard')}
-                className={`px-4 py-2 rounded-lg text-xs font-black uppercase transition-all ${viewMode === 'leaderboard' ? 'bg-white shadow-sm text-brand-primary' : 'text-slate-500'}`}
-              >
-                Board
-              </button>
-            </div>
-          )}
+          <div className="flex bg-slate-100 p-1 rounded-xl">
+            <button 
+              onClick={() => setViewMode('personal')}
+              className={`px-4 py-2 rounded-lg text-xs font-black uppercase transition-all ${viewMode === 'personal' ? 'bg-white shadow-sm text-brand-primary' : 'text-slate-500'}`}
+            >
+              My Marks
+            </button>
+            <button 
+              onClick={() => setViewMode('leaderboard')}
+              className={`px-4 py-2 rounded-lg text-xs font-black uppercase transition-all ${viewMode === 'leaderboard' ? 'bg-white shadow-sm text-brand-primary' : 'text-slate-500'}`}
+            >
+              Board
+            </button>
+          </div>
 
           <select 
             value={filterClass} 
@@ -114,18 +116,16 @@ export default function Results({ user, role, userProfile }: { user: any, role: 
             <option value="12th">12th Class</option>
           </select>
 
-          {role === 'admin' && (
-            <div className="relative w-full md:w-80">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search name/email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="vibrant-input pl-12 !py-2"
-              />
-            </div>
-          )}
+          <div className="relative w-full md:w-80">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search name/email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="vibrant-input pl-12 !py-2"
+            />
+          </div>
         </div>
       </header>
 

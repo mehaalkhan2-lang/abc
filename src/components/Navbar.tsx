@@ -12,10 +12,21 @@ interface NavbarProps {
   onInstallClick: () => void;
   showInstallButton: boolean;
   badges?: Record<string, number>;
+  isAdminUnlocked?: boolean;
+  onLogoClick?: () => void;
 }
 
-export default function Navbar({ user, role, activeSection, setActiveSection, onInstallClick, showInstallButton, badges = {} }: NavbarProps) {
-  const [clickCount, setClickCount] = React.useState(0);
+export default function Navbar({ 
+  user, 
+  role, 
+  activeSection, 
+  setActiveSection, 
+  onInstallClick, 
+  showInstallButton, 
+  badges = {},
+  isAdminUnlocked = false,
+  onLogoClick
+}: NavbarProps) {
   const [showInstallHelp, setShowInstallHelp] = React.useState(false);
   const navItems = [
     { id: 'lectures', label: 'Topics', icon: BookOpen, emoji: '🎥' },
@@ -26,17 +37,9 @@ export default function Navbar({ user, role, activeSection, setActiveSection, on
     { id: 'notifications', label: 'Updates', icon: Bell, emoji: '🔔' },
   ];
 
-  if (role === 'admin') {
+  if (role === 'admin' && isAdminUnlocked) {
     navItems.push({ id: 'admin', label: 'Admin', icon: LayoutDashboard, emoji: '📊' });
   }
-
-  const handleLogoClick = () => {
-    setClickCount(prev => prev + 1);
-    if (clickCount >= 4) {
-      setActiveSection('admin');
-      setClickCount(0);
-    }
-  };
 
   return (
     <>
@@ -106,7 +109,7 @@ export default function Navbar({ user, role, activeSection, setActiveSection, on
 
       <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-72 bg-brand-secondary flex-col text-white shadow-2xl z-50">
         <div className="p-8">
-          <div className="flex items-center gap-3 select-none cursor-default" onClick={handleLogoClick}>
+          <div className="flex items-center gap-3 select-none cursor-default" onClick={onLogoClick}>
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-inner group">
               <GraduationCap className="w-8 h-8 text-brand-primary group-hover:scale-110 transition-transform" />
             </div>
@@ -213,7 +216,7 @@ export default function Navbar({ user, role, activeSection, setActiveSection, on
                 <Download className="w-3 h-3" />
                 Mobile App
              </button>
-             <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest text-center opacity-30 select-none" onClick={handleLogoClick}>
+             <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest text-center opacity-30 select-none cursor-default" onClick={onLogoClick}>
                Academic Portal Access • X.4.MV
              </p>
           </div>

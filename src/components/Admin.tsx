@@ -379,8 +379,8 @@ export default function Admin() {
     <div className="max-w-5xl mx-auto">
       <header className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl vibrant-heading mb-2">Instructor Console</h1>
-          <p className="text-slate-500 font-medium">Manage coaching portions, student results, and campus alerts.</p>
+          <h1 className="text-4xl vibrant-heading mb-2">Admin Dashboard</h1>
+          <p className="text-slate-500 font-medium">Internal management for portions, official results, and campus alerts.</p>
         </div>
         
         <div className={`flex items-center gap-3 px-4 py-2 rounded-2xl border ${isAdminUser ? 'bg-emerald-50 border-emerald-100' : 'bg-rose-50 border-rose-100'}`}>

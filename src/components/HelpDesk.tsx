@@ -95,7 +95,7 @@ export default function HelpDesk({ role }: { role: string | null }) {
     <div className="max-w-4xl mx-auto">
       <header className="mb-12">
         <h1 className="text-4xl vibrant-heading mb-2">Help Desk</h1>
-        <p className="text-slate-500 font-medium italic">Direct line to instructors for your doubts and questions.</p>
+        <p className="text-slate-500 font-medium italic">Direct line to administration for your doubts and questions.</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -132,7 +132,7 @@ export default function HelpDesk({ role }: { role: string | null }) {
                 </button>
               </form>
               <div className="mt-8 p-4 bg-indigo-50 rounded-2xl border border-indigo-100 italic text-[11px] text-indigo-600 font-bold leading-relaxed">
-                Response times may vary. Instructors usually respond within 24 hours.
+                Response times may vary. Administration usually responds within 24 hours.
               </div>
             </div>
           </div>
@@ -195,7 +195,7 @@ export default function HelpDesk({ role }: { role: string | null }) {
                             <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
                               <ShieldCheck className="w-3 h-3" />
                             </div>
-                            <span className="text-[9px] font-black uppercase tracking-widest text-indigo-100">Instructor Response</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-indigo-100">Official Response</span>
                           </div>
                           <p className="font-bold text-sm leading-relaxed">{inquiry.response}</p>
                           <div className="absolute -left-2 top-4 w-4 h-4 bg-indigo-600 rotate-45 shadow-[-2px_-2px_0_0_rgba(0,0,0,0.05)]" />

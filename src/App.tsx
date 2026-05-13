@@ -24,6 +24,29 @@ export default function App() {
   const [onboarding, setOnboarding] = useState(false);
   const [profileData, setProfileData] = useState({ fullName: '', classLevel: '9th' });
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState(() => {
+    return localStorage.getItem('isAdminUnlocked') === 'true';
+  });
+  const [logoClicks, setLogoClicks] = useState(0);
+
+  const handleLogoClick = () => {
+    const nextClicks = logoClicks + 1;
+    if (nextClicks >= 5) {
+      const newState = !isAdminUnlocked;
+      setIsAdminUnlocked(newState);
+      localStorage.setItem('isAdminUnlocked', String(newState));
+      setLogoClicks(0);
+      
+      // Play a subtle sound or feedback if possible, but for now just toggle
+      if (newState) {
+        console.log("Admin Portal Unlocked");
+      }
+    } else {
+      setLogoClicks(nextClicks);
+      // Reset clicks after 2 seconds of inactivity
+      setTimeout(() => setLogoClicks(0), 2000);
+    }
+  };
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: any) => {
@@ -74,7 +97,7 @@ export default function App() {
     ];
 
     const unsubscribes = collections.map(col => {
-      // Don't listen to private collections if not signed in to avoid permission errors
+      // Don't listen to private collections if not signed in
       if (!col.public && !user) return null;
 
       return onSnapshot(collection(db, col.path), (snapshot) => {
@@ -196,7 +219,7 @@ export default function App() {
       case 'quizzes': return user ? <Quizzes user={user} /> : <Auth />;
       case 'helpdesk': return user ? <HelpDesk role={role} /> : <Auth />;
       case 'notifications': return <Notifications role={role} />;
-      case 'admin': return role === 'admin' ? <Admin /> : <Auth />;
+      case 'admin': return (role === 'admin' && isAdminUnlocked) ? <Admin /> : (role === 'admin' ? <Lectures role={role} /> : <Auth />);
       case 'login': return <Auth />;
       default: return <Lectures role={role} />;
     }
@@ -277,6 +300,8 @@ export default function App() {
         onInstallClick={handleInstallClick}
         showInstallButton={!!deferredPrompt}
         badges={badges}
+        isAdminUnlocked={isAdminUnlocked}
+        onLogoClick={handleLogoClick}
       />
       
       <main className="max-w-7xl mx-auto p-4 md:p-10 pb-20">

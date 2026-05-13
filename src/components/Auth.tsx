@@ -80,10 +80,10 @@ export default function Auth() {
           <div className="space-y-4">
             <h2 className="text-2xl font-black text-slate-800 flex items-center justify-center gap-2">
               <span className="w-8 h-1 bg-brand-primary rounded-full" />
-              Staff Portal
+              Secure Portal
               <span className="w-8 h-1 bg-brand-primary rounded-full" />
             </h2>
-            <p className="text-slate-400 text-center font-medium max-w-sm mx-auto">Authorized personnel only. Please sign in with your official administrator account to manage academy content.</p>
+            <p className="text-slate-400 text-center font-medium max-w-sm mx-auto">Please sign in with your account to access personalized results and practice tests.</p>
           </div>
 
           <button
@@ -116,7 +116,7 @@ export default function Auth() {
                     />
                   </svg>
                 </div>
-                <span className="text-xl font-black text-slate-800 tracking-tight">Staff Login</span>
+                <span className="text-xl font-black text-slate-800 tracking-tight">Login with Google</span>
               </>
             )}
           </button>
@@ -124,10 +124,10 @@ export default function Auth() {
           <footer className="space-y-4">
             <div className="flex items-center justify-center gap-3">
               <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Management System Only</p>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Secure Access Verified</p>
             </div>
             <p className="text-[10px] text-slate-400 text-center font-bold">
-              Tip: Students do not need to login to view lectures or results.
+              Account verification based on academy records.
             </p>
           </footer>
         </div>
