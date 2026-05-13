@@ -80,6 +80,10 @@ export default function Quizzes({ user }: QuizzesProps) {
   }, [user]);
 
   const startQuiz = async (quiz: Quiz) => {
+    if (!user) {
+      alert("Please sign in to take practice tests and track your progress.");
+      return;
+    }
     setLoading(true);
     setErrorStatus(null);
     try {

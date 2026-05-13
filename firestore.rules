@@ -146,7 +146,7 @@ service cloud.firestore {
     }
 
     match /results/{resultId} {
-      allow read: if isSignedIn();
+      allow read: if true;
       allow create: if isAdmin(); // Relaxed validation for admin to ensure functionality
       allow update: if isAdmin();
       allow delete: if isAdmin();
@@ -167,11 +167,11 @@ service cloud.firestore {
     }
     
     match /quizzes/{quizId} {
-      allow read: if isSignedIn();
+      allow read: if true;
       allow create, update, delete: if isAdmin();
 
       match /questions/{questionId} {
-        allow read: if isSignedIn();
+        allow read: if true;
         allow create, update, delete: if isAdmin();
       }
     }

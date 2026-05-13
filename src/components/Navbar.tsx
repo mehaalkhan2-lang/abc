@@ -45,21 +45,6 @@ export default function Navbar({
     <>
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 md:hidden py-2 px-4 z-50">
         <AnimatePresence>
-          {!user && (
-            <motion.div
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               className="px-4 mb-2"
-            >
-              <button
-                onClick={() => setActiveSection('login')}
-                className="w-full bg-slate-800 text-white py-3 rounded-2xl flex items-center justify-center gap-3 font-black text-xs shadow-lg active:scale-95 transition-all"
-              >
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>SIGN IN TO PORTAL</span>
-              </button>
-            </motion.div>
-          )}
           {showInstallButton && (
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -69,9 +54,9 @@ export default function Navbar({
             >
               <button
                 onClick={onInstallClick}
-                className="w-full bg-brand-primary text-white py-3 rounded-2xl flex items-center justify-center gap-3 font-black text-sm shadow-lg border-b-4 border-indigo-800 active:border-b-0 active:translate-y-1 transition-all"
+                className="w-full bg-slate-800 text-white py-3 rounded-2xl flex items-center justify-center gap-3 font-black text-sm shadow-lg active:scale-95 transition-all"
               >
-                <Download className="w-5 h-5" />
+                <Download className="w-5 h-5 text-emerald-400" />
                 <span>📥 INSTALL APP</span>
               </button>
             </motion.div>
@@ -101,6 +86,19 @@ export default function Navbar({
               </button>
             );
           })}
+          {!user && (
+             <button
+              onClick={() => setActiveSection('login')}
+              className={`flex flex-col items-center space-y-1 px-3 py-1 rounded-lg transition-all relative ${
+                activeSection === 'login' ? 'text-brand-primary' : 'text-slate-500'
+              }`}
+            >
+              <div className={`p-2 rounded-xl ${activeSection === 'login' ? 'bg-indigo-50' : ''}`}>
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-bold">Portal</span>
+            </button>
+          )}
         </div>
         <div className="mt-1 text-center md:hidden">
           <p className="text-[7px] font-black text-slate-300 uppercase tracking-[0.3em]">X.4.MV</p>

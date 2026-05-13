@@ -22,7 +22,7 @@ export default function Results({ user, role, userProfile }: { user: any, role: 
   const [lookupName, setLookupName] = useState('');
   const [lookupClass, setLookupClass] = useState('9th');
   const [filterClass, setFilterClass] = useState(userProfile?.classLevel || 'All');
-  const [viewMode, setViewMode] = useState<'personal' | 'leaderboard'>('personal');
+  const [viewMode, setViewMode] = useState<'personal' | 'leaderboard'>(role === 'admin' ? 'leaderboard' : 'personal');
 
   useEffect(() => {
     if (role === 'admin') setViewMode('leaderboard');

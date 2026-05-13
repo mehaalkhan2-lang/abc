@@ -90,9 +90,9 @@ export default function App() {
   useEffect(() => {
     const collections = [
       { id: 'lectures', path: 'lectures', public: true },
-      { id: 'results', path: 'results', public: false },
+      { id: 'results', path: 'results', public: true },
       { id: 'notes', path: 'notes', public: true },
-      { id: 'quizzes', path: 'quizzes', public: false },
+      { id: 'quizzes', path: 'quizzes', public: true },
       { id: 'notifications', path: 'notifications', public: true }
     ];
 
@@ -214,9 +214,9 @@ export default function App() {
   const renderSection = () => {
     switch (activeSection) {
       case 'lectures': return <Lectures role={role} />;
-      case 'results': return user ? <Results user={user} role={role} userProfile={userProfile} /> : <Auth />;
+      case 'results': return <Results user={user} role={role} userProfile={userProfile} />;
       case 'notes': return <Notes role={role} />;
-      case 'quizzes': return user ? <Quizzes user={user} /> : <Auth />;
+      case 'quizzes': return <Quizzes user={user} />;
       case 'helpdesk': return user ? <HelpDesk role={role} /> : <Auth />;
       case 'notifications': return <Notifications role={role} />;
       case 'admin': return (role === 'admin' && isAdminUnlocked) ? <Admin /> : (role === 'admin' ? <Lectures role={role} /> : <Auth />);
