@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { db } from '../lib/firebase';
 import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
-import { Award, Search, User, Calendar, BookOpen, ChevronRight, Download, Printer } from 'lucide-react';
+import { Award, Search, User, Calendar, BookOpen, ChevronRight, Download, Printer, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import { handleFirestoreError, OperationType } from '../lib/errorHandlers';
 
@@ -39,6 +39,8 @@ export default function Results({ user, role, userProfile }: { user: any, role: 
       setResults(docs);
       setLoading(false);
     }, (error) => {
+      console.error("Results Sync Error:", error);
+      setLoading(false); // Stop loading even on error
       handleFirestoreError(error, OperationType.LIST, 'results');
     });
 
@@ -201,9 +203,15 @@ export default function Results({ user, role, userProfile }: { user: any, role: 
                   <div>
                     <div className="flex items-center gap-3 mb-1">
                       <h3 className="text-2xl font-black text-slate-800">{result.studentName}</h3>
-                      <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-[10px] font-black uppercase tracking-widest">
-                        {result.classLevel}
-                      </span>
+                      <div className="flex gap-2">
+                        <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-[10px] font-black uppercase tracking-widest leading-none flex items-center">
+                          {result.classLevel}
+                        </span>
+                        <span className="px-3 py-1 bg-amber-50 text-amber-600 border border-amber-100 rounded-lg text-[10px] font-black uppercase tracking-widest leading-none flex items-center gap-1">
+                          <ShieldCheck className="w-3 h-3" />
+                          SCA Verified
+                        </span>
+                      </div>
                     </div>
                     <div className="flex items-center space-x-6 text-sm text-slate-400 font-bold">
                       <div className="flex items-center">

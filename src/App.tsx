@@ -49,6 +49,7 @@ export default function App() {
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
+          // Still allow access but maybe show a generic error later
         }
       } else {
         setUserProfile(null);
@@ -65,14 +66,17 @@ export default function App() {
 
   useEffect(() => {
     const collections = [
-      { id: 'lectures', path: 'lectures' },
-      { id: 'results', path: 'results' },
-      { id: 'notes', path: 'notes' },
-      { id: 'quizzes', path: 'quizzes' },
-      { id: 'notifications', path: 'notifications' }
+      { id: 'lectures', path: 'lectures', public: true },
+      { id: 'results', path: 'results', public: false },
+      { id: 'notes', path: 'notes', public: true },
+      { id: 'quizzes', path: 'quizzes', public: false },
+      { id: 'notifications', path: 'notifications', public: true }
     ];
 
     const unsubscribes = collections.map(col => {
+      // Don't listen to private collections if not signed in to avoid permission errors
+      if (!col.public && !user) return null;
+
       return onSnapshot(collection(db, col.path), (snapshot) => {
         const lastSeen = JSON.parse(localStorage.getItem('lastSeenCounts') || '{}');
         const currentCount = snapshot.size;
@@ -85,34 +89,21 @@ export default function App() {
               [col.id]: currentCount - previousCount
             };
             
-            // Set external app badge
             const total = Object.values(newBadges).reduce((a: number, b: number) => a + b, 0);
             if ('setAppBadge' in navigator) {
-              (navigator as any).setAppBadge(total).catch((e: any) => console.error('Badge error:', e));
+              (navigator as any).setAppBadge(total).catch(() => {});
             }
             
             return newBadges;
           });
-        } else {
-          setBadges(prev => {
-            const next = { ...prev };
-            delete next[col.id];
-            
-            // Update/Clear external app badge
-            const total = Object.values(next).reduce((a: number, b: number) => a + b, 0);
-            if ('setAppBadge' in navigator) {
-              if (total === 0) (navigator as any).clearAppBadge();
-              else (navigator as any).setAppBadge(total);
-            }
-            
-            return next;
-          });
         }
+      }, (error) => {
+        console.warn(`Snapshot error for ${col.path}:`, error.message);
       });
     });
 
-    return () => unsubscribes.forEach(unsub => unsub());
-  }, []);
+    return () => unsubscribes.forEach(unsub => unsub?.());
+  }, [user]); // Re-run when user auth state changes
 
   const handleSectionClick = async (section: string) => {
     setActiveSection(section);
@@ -200,12 +191,13 @@ export default function App() {
   const renderSection = () => {
     switch (activeSection) {
       case 'lectures': return <Lectures role={role} />;
-      case 'results': return <Results user={user} role={role} userProfile={userProfile} />;
+      case 'results': return user ? <Results user={user} role={role} userProfile={userProfile} /> : <Auth />;
       case 'notes': return <Notes role={role} />;
-      case 'quizzes': return <Quizzes user={user} />;
-      case 'helpdesk': return <HelpDesk role={role} />;
+      case 'quizzes': return user ? <Quizzes user={user} /> : <Auth />;
+      case 'helpdesk': return user ? <HelpDesk role={role} /> : <Auth />;
       case 'notifications': return <Notifications role={role} />;
       case 'admin': return role === 'admin' ? <Admin /> : <Auth />;
+      case 'login': return <Auth />;
       default: return <Lectures role={role} />;
     }
   };

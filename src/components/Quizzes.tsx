@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { User } from 'firebase/auth';
 import { db, auth } from '../lib/firebase';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, getDocs } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, getDocs } from 'firebase/firestore';
 import { ShieldCheck, Trophy, Clock, CheckCircle2, AlertCircle, ChevronRight, Play, Info, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { handleFirestoreError, OperationType } from '../lib/errorHandlers';
@@ -53,13 +53,23 @@ export default function Quizzes({ user }: QuizzesProps) {
     const unsubscribeQuizzes = onSnapshot(q, (snapshot) => {
       setQuizzes(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Quiz[]);
       setLoading(false);
-    }, (error) => handleFirestoreError(error, OperationType.LIST, 'quizzes'));
+    }, (error) => {
+      console.error("Quiz Fetch Error:", error);
+      setLoading(false); // Ensure loading stops even on error
+      handleFirestoreError(error, OperationType.LIST, 'quizzes');
+    });
 
     if (user) {
-      const aq = query(collection(db, 'quiz_attempts'), orderBy('completedAt', 'desc'));
+      // Optimize: Filter results in Firestore, not in memory
+      const aq = query(
+        collection(db, 'quiz_attempts'), 
+        where('userId', '==', user.uid),
+        orderBy('completedAt', 'desc')
+      );
       const unsubscribeAttempts = onSnapshot(aq, (snapshot) => {
-        setAttempts(snapshot.docs.filter(doc => doc.data().userId === user.uid).map(doc => ({ id: doc.id, ...doc.data() })) as QuizAttempt[]);
-      });
+        setAttempts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as QuizAttempt[]);
+      }, (err) => console.warn("Attempts snapshot error:", err));
+      
       return () => {
         unsubscribeQuizzes();
         unsubscribeAttempts();
@@ -287,14 +297,16 @@ export default function Quizzes({ user }: QuizzesProps) {
                   onClick={() => startQuiz(quiz)}
                 >
                   <div className="flex justify-between items-start mb-6">
-                    <div className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-widest">
-                       {quiz.classLevel} Class
+                    <div className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
+                       <ShieldCheck className="w-3 h-3" />
+                       SCA Official
                     </div>
                     <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-300 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-inner">
                       <Play className="w-5 h-5 fill-current" />
                     </div>
                   </div>
-                  <h3 className="text-xl font-black text-slate-800 mb-2 truncate leading-tight">{quiz.title}</h3>
+                  <h3 className="text-xl font-black text-slate-800 mb-1 truncate leading-tight">{quiz.title}</h3>
+                  <p className="text-[9px] font-black text-indigo-300 uppercase tracking-tighter mb-2">{quiz.classLevel} Standard</p>
                   <div className="text-xs text-amber-600 font-black uppercase tracking-widest mb-6 flex items-center justify-between">
                     <div className="flex items-center gap-1">
                       <div className="w-1.5 h-1.5 bg-amber-400 rounded-full" />

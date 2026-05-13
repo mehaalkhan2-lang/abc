@@ -13,13 +13,49 @@ export default function Auth() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // Removed manual DB write here; App.tsx handles onboarding if profile is missing
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login Error:', error);
+      alert('Login failed: ' + error.message);
     } finally {
       setLoading(false);
     }
   };
+
+  if (auth.currentUser) {
+    return (
+      <div className="min-h-screen bg-brand-secondary flex items-center justify-center p-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-md vibrant-card !p-10 text-center"
+        >
+          <div className="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <ShieldCheck className="w-10 h-10 text-brand-primary" />
+          </div>
+          <h2 className="text-2xl font-black text-slate-800 mb-2">Signed In</h2>
+          <p className="text-slate-500 font-medium mb-8">
+            You are currently signed in as <br />
+            <span className="font-black text-brand-primary">{auth.currentUser.email}</span>
+          </p>
+          
+          <div className="space-y-4">
+             <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 mb-6">
+                <p className="text-xs font-black text-amber-700 uppercase tracking-widest leading-relaxed">
+                   If you were expecting Admin access, ensure you are using the correct account.
+                </p>
+             </div>
+             
+             <button
+              onClick={() => auth.signOut()}
+              className="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all"
+            >
+              Log Out
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-brand-secondary flex items-center justify-center p-6 sm:p-12 relative overflow-hidden">

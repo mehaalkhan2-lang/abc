@@ -42,7 +42,22 @@ export default function Navbar({ user, role, activeSection, setActiveSection, on
     <>
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 md:hidden py-2 px-4 z-50">
         <AnimatePresence>
-          {showInstallButton ? (
+          {!user && (
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               className="px-4 mb-2"
+            >
+              <button
+                onClick={() => setActiveSection('login')}
+                className="w-full bg-slate-800 text-white py-3 rounded-2xl flex items-center justify-center gap-3 font-black text-xs shadow-lg active:scale-95 transition-all"
+              >
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>SIGN IN TO PORTAL</span>
+              </button>
+            </motion.div>
+          )}
+          {showInstallButton && (
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -55,20 +70,6 @@ export default function Navbar({ user, role, activeSection, setActiveSection, on
               >
                 <Download className="w-5 h-5" />
                 <span>📥 INSTALL APP</span>
-              </button>
-            </motion.div>
-          ) : (
-             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="px-4 mb-2"
-            >
-              <button
-                onClick={() => setShowInstallHelp(true)}
-                className="w-full bg-slate-800 text-white py-3 rounded-2xl flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-widest shadow-lg"
-              >
-                <Smartphone className="w-4 h-4" />
-                <span>Get App for Mobile</span>
               </button>
             </motion.div>
           )}
@@ -198,6 +199,13 @@ export default function Navbar({ user, role, activeSection, setActiveSection, on
         )}
         {!user && (
           <div className="p-6 mt-auto space-y-4">
+             <button 
+                onClick={() => setActiveSection('login')}
+                className="w-full flex items-center justify-center gap-3 bg-white text-brand-primary py-4 rounded-2xl transition-all font-black text-xs uppercase tracking-widest shadow-xl shadow-indigo-900/40 active:scale-95"
+             >
+                <ShieldCheck className="w-4 h-4" />
+                Sign In
+             </button>
              <button 
                 onClick={() => setShowInstallHelp(true)}
                 className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 py-3 rounded-xl transition-colors font-black text-[10px] uppercase tracking-widest text-indigo-300"

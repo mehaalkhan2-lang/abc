@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { db } from '../lib/firebase';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { PlayCircle, Clock, User, ExternalLink, Download, Search } from 'lucide-react';
+import { PlayCircle, Clock, User, ExternalLink, Download, Search, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import { handleFirestoreError, OperationType } from '../lib/errorHandlers';
 import { downloadFile } from '../lib/downloadUtils';
@@ -165,6 +165,10 @@ export default function Lectures({ role }: { role: string | null }) {
                     </span>
                     <span className="px-3 py-1 bg-amber-400 text-amber-950 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm">
                       {lecture.subject}
+                    </span>
+                    <span className="px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3" />
+                      SCA Official
                     </span>
                     <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-[10px] font-black uppercase tracking-widest">
                       {lecture.date?.toDate ? lecture.date.toDate().toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : 'Today'}

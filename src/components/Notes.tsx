@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { db } from '../lib/firebase';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { FileText, Download, Clock, Info, ExternalLink } from 'lucide-react';
+import { FileText, Download, Clock, Info, ExternalLink, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import { handleFirestoreError, OperationType } from '../lib/errorHandlers';
 import { downloadFile } from '../lib/downloadUtils';
@@ -141,6 +141,10 @@ export default function Notes({ role }: { role: string | null }) {
                          </span>
                          <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-[9px] font-black uppercase">
                            {note.subject || 'Docs'}
+                         </span>
+                         <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded text-[9px] font-black uppercase flex items-center gap-1">
+                           <ShieldCheck className="w-2.5 h-2.5" />
+                           Official
                          </span>
                       </div>
 
